@@ -1,5 +1,6 @@
 package com.example.miniweibo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ public class Weibo {
     private String content;
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonIgnore
     private User user;
     //private Long userId;
     private LocalDateTime createTime;

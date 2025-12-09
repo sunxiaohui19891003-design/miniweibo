@@ -2,6 +2,7 @@ package com.example.miniweibo.service;
 
 import com.example.miniweibo.entity.User;
 import com.example.miniweibo.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,7 @@ public class UserService {
         if(!dbUser.getPassword().equals(user.getPassword())){
             return null;
         }
-//        if(dbUser != null && dbUser.getPassword().equals(user.getPassword())){
-//            sess
-//        }
+
         return  dbUser;
     }
     public  void deleteById(Long id){
