@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 @RestController
+
 public class WeiboController {
     @Autowired
     private WeiboService weiboService;
@@ -32,6 +33,7 @@ public class WeiboController {
     public List<Weibo> list(){
         return weiboService.list();
     }
+
     @PostMapping("/user/{userId}")
     public List<Weibo> listByUserId(@PathVariable Long userId){
         return weiboService.listByUserId(userId);

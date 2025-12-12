@@ -19,6 +19,8 @@ public class WeiboService {
     public List<Weibo> list() {
         return weiboRepository.findAll();
     }
+
+
     public List<Weibo> listByUserId(Long userId) {
         return weiboRepository.findByUserId(userId);
     }
