@@ -12,7 +12,7 @@ public class Weibo {
     private Long id;
     private String content;
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
     //private Long userId;
