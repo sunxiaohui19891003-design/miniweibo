@@ -39,7 +39,18 @@ public class WeiboController {
         return weiboService.listByUserId(userId);
     }
     @DeleteMapping("/{id}")
-    public void deleteById (@PathVariable Long id){
+    public void deleteById (@PathVariable Long id,HttpSession session){
+        Long loginUserId = (Long)session.getAttribute("userId");
+        if(loginUserId == null){
+            throw new RuntimeException("请先登录");
+        }
+        Weibo weibo = weiboService.findById(id);
+        if(weibo == null){
+            throw new RuntimeException("微博不存在");
+        }
+        if(!weibo.getUser().getId().equals(loginUserId)){
+            throw new RuntimeException("不能删除别人的微博");
+        }
         weiboService.deleteById(id);
     }
     @PutMapping("/weibo/{id}")

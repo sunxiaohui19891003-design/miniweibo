@@ -19,6 +19,9 @@ public class WeiboService {
     public List<Weibo> list() {
         return weiboRepository.findAll();
     }
+    public Weibo findById(Long id){
+        return  weiboRepository.findById(id).orElse(null);
+    }
 
 
     public List<Weibo> listByUserId(Long userId) {
@@ -26,6 +29,7 @@ public class WeiboService {
     }
 
     public void deleteById (Long id) {
+
         weiboRepository.deleteById(id);
     }
     public Weibo update(Long id,String newContent){
