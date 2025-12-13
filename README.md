@@ -1,4 +1,8 @@
 # MiniWeibo（ミニ微博システム）
+## 🔗 オンラインデモ（Live Demo）
+
+- フロントエンド：https://miniweibo-frontend.onrender.com
+- バックエンド（API）：https://miniweibo-backend.onrender.com
 
 ## 📌 プロジェクト概要
 MiniWeibo は Spring Boot と MySQL を使って作成したシンプルな微博（SNS）バックエンドシステムです。  
