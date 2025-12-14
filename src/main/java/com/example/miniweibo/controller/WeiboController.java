@@ -68,4 +68,12 @@ public class WeiboController {
         }
         return weiboService.update(id,weibo.getContent());
     }
+    @PostMapping("/weibo/{id}/like")
+    public boolean like (@PathVariable Long id, HttpSession session){
+        Long loginUserId = (Long)session.getAttribute("userId");
+        if(loginUserId == null){
+            return false;
+        }
+        return weiboService.like(loginUserId,id);
+    }
 }
