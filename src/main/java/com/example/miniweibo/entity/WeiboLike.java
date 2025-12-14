@@ -1,11 +1,12 @@
 package com.example.miniweibo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "weibo_like")
 public class WeiboLike {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     public Long getId() {
