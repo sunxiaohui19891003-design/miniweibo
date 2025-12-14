@@ -7,7 +7,11 @@ import jakarta.persistence.*;
 public class WeiboLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
+    private Long userId;
+
+    private Long weiboId;
 
     public Long getId() {
         return id;
@@ -33,7 +37,4 @@ public class WeiboLike {
         this.userId = userId;
     }
 
-    Long userId;
-
-    Long weiboId;
 }
