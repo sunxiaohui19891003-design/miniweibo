@@ -15,6 +15,7 @@ import java.util.Optional;
 public class WeiboService {
     @Autowired
     private WeiboRepository weiboRepository;
+    @Autowired
     private WeiboLikeRepository weiboLikeRepository;
     public Weibo post(Weibo weibo) {
         weibo.setCreateTime(LocalDateTime.now());
@@ -22,6 +23,7 @@ public class WeiboService {
     }
 
     public List<Weibo> list() {
+
         return weiboRepository.findAll();
     }
     public Weibo findById(Long id){
