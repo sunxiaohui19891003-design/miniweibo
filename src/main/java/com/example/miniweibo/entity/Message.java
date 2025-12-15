@@ -14,11 +14,8 @@ public class Message {
     private User sender;
     @ManyToOne
     private User receiver;
-
     private String content;
-
     private LocalDateTime createTime;
-
     public LocalDateTime getCreateTime() {
         return createTime;
     }

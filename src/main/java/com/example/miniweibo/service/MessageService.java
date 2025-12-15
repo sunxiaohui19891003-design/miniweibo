@@ -42,7 +42,7 @@ public class MessageService {
         }
     }
     public  List<Message> messages(Long receiverId){
-        List<Message> messages = messageRepository.findByReceiverId(receiverId);
+        List<Message> messages = messageRepository.findByReceiver_Id(receiverId);
         return messages;
     }
 }
