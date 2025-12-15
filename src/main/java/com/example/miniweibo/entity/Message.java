@@ -19,7 +19,10 @@ public class Message {
     public LocalDateTime getCreateTime() {
         return createTime;
     }
-
+    @PrePersist
+    public void prePersist() {
+        this.createTime = LocalDateTime.now();
+    }
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
