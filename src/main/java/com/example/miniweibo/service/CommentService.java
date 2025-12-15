@@ -36,10 +36,11 @@ public class CommentService {
     }
     public Comment updateComment(User user,Long commentId,String content){
         Comment comment = commentRepository.findById(commentId).get();
-        if(comment.getUser().getId().equals (user.getId())){
-            comment.setContent(content);
-            commentRepository.save(comment);
+        if(!comment.getUser().getId().equals (user.getId())){
+            return null;
         }
+        comment.setContent(content);
+        commentRepository.save(comment);
         return comment;
     }
     public List<Comment> getCommentsByWeibo(Long weiboId){
