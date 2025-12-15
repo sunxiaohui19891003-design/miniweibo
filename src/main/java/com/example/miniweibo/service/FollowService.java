@@ -20,7 +20,8 @@ public class FollowService {
     UserRepository userRepository;
     @Autowired
     FollowRepository followRepository;
-
+    @Autowired
+    NotificationService notificationService;
     public boolean follow(Long follower_id, Long following_id) {
         Optional<Follow> count =
                 followRepository.findByFollower_IdAndFollowing_Id(follower_id, following_id);
@@ -34,7 +35,13 @@ public class FollowService {
             Follow xinFollow = new Follow();
             xinFollow.setFollower(follower);
             xinFollow.setFollowing(following);
-            followRepository.save(xinFollow);
+            Follow saved = followRepository.save(xinFollow);
+            notificationService.addnotification(
+                    follower_id,          // 谁发的
+                    following_id,        // 通知给谁
+                    "FOLLOW",         // 类型
+                    saved.getId()    // 关联的私信ID
+            );
             return true;
         }
     }

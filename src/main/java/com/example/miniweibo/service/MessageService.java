@@ -15,6 +15,8 @@ public class MessageService {
     MessageRepository messageRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    NotificationService notificationService;
     public Message addMessage(Long senderId,Long receiverId,String content){
         Message message = new Message();
         message.setContent(content);
@@ -23,6 +25,12 @@ public class MessageService {
         User receiver = userRepository.findById(receiverId).get();
         message.setReceiver(receiver);
         messageRepository.save(message);
+        notificationService.addnotification(
+                senderId,          // 谁发的
+                receiverId,        // 通知给谁
+                "MESSAGE",         // 类型
+                message.getId()    // 关联的私信ID
+        );
         return message;
     }
     public void deleteMessage(Long id,Long senderId){

@@ -18,14 +18,22 @@ public class CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private WeiboRepository weiboRepository;
+    @Autowired
+    NotificationService notificationService;
     public Comment addComment(User user, Long weiboId, String content){
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setUser(user);
         Weibo weibo = weiboRepository.findById(weiboId).get();
         comment.setWeibo(weibo);
-        commentRepository.save(comment);
-        return comment;
+        Comment saved = commentRepository.save(comment);
+        notificationService.addnotification(
+                user.getId(),          // 谁发的
+                weibo.getUser().getId(),        // 通知给谁
+                "COMMENT",         // 类型
+                saved.getId()    // 关联的私信ID
+        );
+        return saved;
     }
     public void deleteComment(User user,Long commentId){
         Comment comment = commentRepository.findById(commentId).get();
