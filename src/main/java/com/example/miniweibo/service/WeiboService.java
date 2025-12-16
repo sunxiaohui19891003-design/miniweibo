@@ -49,6 +49,9 @@ public class WeiboService {
         weibo.setContent(newContent);
         return weiboRepository.save(weibo);
     }
+    public List<Weibo> searchByContent(String keyword) {
+        return weiboRepository.findByContentContaining(keyword);
+    }
     public boolean like(Long userId,Long id){
         Weibo weibo = weiboRepository.findById(id).orElse(null);
         if(weibo == null){

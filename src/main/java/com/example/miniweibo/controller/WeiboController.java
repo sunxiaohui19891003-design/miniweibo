@@ -29,6 +29,11 @@ public class WeiboController {
         weibo.setCreateTime(LocalDateTime.now());
         return weiboService.post(weibo);
     }
+    @PostMapping("/weibo/search")
+    public List<Weibo> search(@RequestParam String keyword) {
+        return weiboService.searchByContent(keyword);
+    }
+
     @PostMapping("/weibo/list")
     public List<Weibo> list(){
         return weiboService.list();

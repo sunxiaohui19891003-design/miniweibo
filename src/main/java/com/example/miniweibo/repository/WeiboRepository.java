@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface WeiboRepository extends JpaRepository<Weibo,Long> {
     List<Weibo> findByUserId(Long userID);
-
+    List<Weibo> findByContentContaining(String keyword);
 }
