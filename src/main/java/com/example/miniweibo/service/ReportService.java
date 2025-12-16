@@ -5,6 +5,8 @@ import com.example.miniweibo.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class ReportService {
     @Autowired
@@ -18,6 +20,7 @@ public class ReportService {
         report.setTargetId(targetId);
         report.setReasonType(reasonType);
         report.setDescription(description);
+        report.setCreateTime(LocalDateTime.now());
         return reportRepository.save(report);
     }
 }
