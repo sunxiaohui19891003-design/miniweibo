@@ -1,11 +1,13 @@
 package com.example.miniweibo.controller;
 
+import com.example.miniweibo.entity.Comment;
 import com.example.miniweibo.entity.User;
 import com.example.miniweibo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,5 +40,10 @@ public class UserController {
     public String logout(HttpSession session){
         session.invalidate();
         return "退出登录";
+    }
+    @GetMapping("/users")
+    public List<User> users(HttpSession session){
+        Long myId = (Long) session.getAttribute("userId");
+        return userService.findAllExceptMe(myId);
     }
 }

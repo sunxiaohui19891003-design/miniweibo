@@ -11,6 +11,16 @@ public class Weibo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
+    private int likeCount;
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore

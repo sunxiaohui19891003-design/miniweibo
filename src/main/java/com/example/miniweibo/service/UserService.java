@@ -1,10 +1,13 @@
 package com.example.miniweibo.service;
 
+import com.example.miniweibo.entity.Comment;
 import com.example.miniweibo.entity.User;
 import com.example.miniweibo.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -26,5 +29,9 @@ public class UserService {
     }
     public  void deleteById(Long id){
         userRepository.deleteById(id);
+    }
+
+    public List<User> findAllExceptMe(Long myId) {
+        return userRepository.findAll().stream().filter(u -> !u.getId().equals(myId)).toList();
     }
 }
