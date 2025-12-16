@@ -22,6 +22,7 @@ public class FollowService {
     FollowRepository followRepository;
     @Autowired
     NotificationService notificationService;
+
     public boolean follow(Long follower_id, Long following_id) {
         Optional<Follow> count =
                 followRepository.findByFollower_IdAndFollowing_Id(follower_id, following_id);
@@ -45,11 +46,13 @@ public class FollowService {
             return true;
         }
     }
-    public List<User> getFollowings (Long follower_id){
+
+    public List<User> getFollowings(Long follower_id) {
         List<Follow> follows = followRepository.findByFollower_Id(follower_id);
         return follows.stream().map(Follow::getFollowing).toList();
     }
-    public List<User> getFollowers (Long follower_id){
+
+    public List<User> getFollowers(Long follower_id) {
         List<Follow> follows = followRepository.findByFollowing_Id(follower_id);
         return follows.stream().map(Follow::getFollower).toList();
     }

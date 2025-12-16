@@ -19,16 +19,28 @@ public class FavoriteService {
     WeiboRepository weiboRepository;
     @Autowired
     ViewHistoryService viewHistoryService;
-    public boolean addFavorite (Long userId,Long weiboId){
-        Optional<Favorite> count = favoriteRepository.findByUserIdAndWeiboId(userId,weiboId);
-        if(count.isPresent()){
+    @Autowired
+    NotificationService notificationService;
+
+    public boolean addFavorite(Long userId, Long weiboId) {
+        Optional<Favorite> count = favoriteRepository.findByUserIdAndWeiboId(userId, weiboId);
+        if (count.isPresent()) {
             favoriteRepository.delete(count.get());
             return false;
-        }else {
+        } else {
             Favorite favorite = new Favorite();
             favorite.setUserId(userId);
             favorite.setWeiboId(weiboId);
             favoriteRepository.save(favorite);
+        }
+        Weibo weibo = weiboRepository.findById(weiboId).orElse(null);
+        if (weibo != null) {
+            notificationService.addnotification(
+                    userId,                       // 谁点的赞
+                    weibo.getUser().getId(),      // 通知给微博作者
+                    "FAVORITE",                       // 类型
+                    weiboId                                                 // targetId：微博ID
+            );
         }
         viewHistoryService.addRecordView(
                 userId,     // 谁浏览的
@@ -40,7 +52,7 @@ public class FavoriteService {
     public List<Weibo> zhaoFavorites(Long userId, Long weiboId) {
         List<Favorite> zhaoFavorites = favoriteRepository.findByUserId(userId);
         List<Long> weiboIds = new ArrayList<>();
-        for(Favorite f : zhaoFavorites){
+        for (Favorite f : zhaoFavorites) {
             weiboIds.add(f.getWeiboId());
         }
         return weiboRepository.findAllById(weiboIds);
