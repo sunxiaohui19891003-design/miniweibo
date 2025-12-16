@@ -17,6 +17,8 @@ public class FavoriteService {
     FavoriteRepository favoriteRepository;
     @Autowired
     WeiboRepository weiboRepository;
+    @Autowired
+    ViewHistoryService viewHistoryService;
     public boolean addFavorite (Long userId,Long weiboId){
         Optional<Favorite> count = favoriteRepository.findByUserIdAndWeiboId(userId,weiboId);
         if(count.isPresent()){
@@ -28,6 +30,10 @@ public class FavoriteService {
             favorite.setWeiboId(weiboId);
             favoriteRepository.save(favorite);
         }
+        viewHistoryService.addRecordView(
+                userId,     // 谁浏览的
+                weiboId     // 浏览了哪条微博
+        );
         return true;
     }
 

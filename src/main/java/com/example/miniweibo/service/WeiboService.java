@@ -19,6 +19,8 @@ public class WeiboService {
     private WeiboLikeRepository weiboLikeRepository;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    ViewHistoryService viewHistoryService;
     public Weibo post(Weibo weibo) {
         weibo.setCreateTime(LocalDateTime.now());
         return weiboRepository.save(weibo);
@@ -64,7 +66,7 @@ public class WeiboService {
             WeiboLike xinLike =  new WeiboLike();
             xinLike.setUserId(userId);
             xinLike.setWeiboId(id);
-;           WeiboLike saved = weiboLikeRepository.save(xinLike);
+            WeiboLike saved = weiboLikeRepository.save(xinLike);
             int n = weibo.getLikeCount();
             weibo.setLikeCount(n + 1);
             weiboRepository.save(weibo);
@@ -73,6 +75,10 @@ public class WeiboService {
                     weibo.getUser().getId(),      // 通知给微博作者
                     "LIKE",                       // 类型
                     id                            // targetId：微博ID
+            );
+            viewHistoryService.addRecordView(
+                    userId,     // 谁浏览的
+                    weibo.getId()     // 浏览了哪条微博
             );
             return true;
         }

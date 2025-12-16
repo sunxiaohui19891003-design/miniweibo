@@ -20,6 +20,8 @@ public class CommentService {
     private WeiboRepository weiboRepository;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    ViewHistoryService viewHistoryService;
     public Comment addComment(User user, Long weiboId, String content){
         Comment comment = new Comment();
         comment.setContent(content);
@@ -32,6 +34,10 @@ public class CommentService {
                 weibo.getUser().getId(),        // 通知给谁
                 "COMMENT",         // 类型
                 saved.getId()    // 关联的私信ID
+        );
+        viewHistoryService.addRecordView(
+                user.getId(),     // 谁浏览的
+                weibo.getId()     // 浏览了哪条微博
         );
         return saved;
     }
