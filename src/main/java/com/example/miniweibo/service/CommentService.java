@@ -22,7 +22,8 @@ public class CommentService {
     NotificationService notificationService;
     @Autowired
     ViewHistoryService viewHistoryService;
-    public Comment addComment(User user, Long weiboId, String content){
+
+    public Comment addComment(User user, Long weiboId, String content) {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setUser(user);
@@ -41,25 +42,31 @@ public class CommentService {
         );
         return saved;
     }
-    public void deleteComment(User user,Long commentId){
-        Comment comment = commentRepository.findById(commentId).get();
-        if(comment.getUser().getId().equals (user.getId())){
-            commentRepository.delete(comment);
-            return;
+
+    public void deleteComment(User user, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("コメントが存在しません。"));
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("他人のコメントは削除できません。");
         }
+        commentRepository.delete(comment);
     }
-    public Comment updateComment(User user,Long commentId,String content){
-        Comment comment = commentRepository.findById(commentId).get();
-        if(!comment.getUser().getId().equals (user.getId())){
-            return null;
+
+    public Comment updateComment(User user, Long commentId, String content) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("コメントが存在しません。"));
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("他人のコメントは更新できません。");
+        }
+
+        if (content == null || content.trim().isEmpty()) {
+            throw new RuntimeException("コメント内容を入力してください。");
+
         }
         comment.setContent(content);
-        commentRepository.save(comment);
-        return comment;
+        return commentRepository.save(comment);
     }
-    public List<Comment> getCommentsByWeibo(Long weiboId){
-        Weibo weibo = weiboRepository.findById(weiboId).get();
-        List<Comment> comments = commentRepository.findByWeibo(weibo);
-        return comments;
+
+    public List<Comment> getCommentsByWeibo(Long weiboId) {
+        Weibo weibo = weiboRepository.findById(weiboId).orElseThrow(()->new RuntimeException("投稿が存在しません。"));
+        return commentRepository.findByWeibo(weibo);
     }
 }

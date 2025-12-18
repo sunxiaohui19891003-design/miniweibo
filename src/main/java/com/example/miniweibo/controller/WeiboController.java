@@ -22,7 +22,7 @@ public class WeiboController {
     public Weibo post(@RequestBody Weibo weibo, HttpSession session){
         Long loginUserId = (Long)session.getAttribute("userId");
         if(loginUserId == null ){
-            throw new RuntimeException("请先登录");
+            throw new RuntimeException("ログインしてください");
         }
         return weiboService.post(weibo,loginUserId);
     }
