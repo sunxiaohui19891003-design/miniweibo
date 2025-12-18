@@ -20,14 +20,11 @@ public class WeiboController {
     private UserRepository userRepository;
     @PostMapping("/post")
     public Weibo post(@RequestBody Weibo weibo, HttpSession session){
-        Long userId = (Long)session.getAttribute("userId");
-        if(userId == null ){
+        Long loginUserId = (Long)session.getAttribute("userId");
+        if(loginUserId == null ){
             throw new RuntimeException("请先登录");
         }
-        User user = userRepository.findById(userId).orElse(null);
-        weibo.setUser(user);
-        weibo.setCreateTime(LocalDateTime.now());
-        return weiboService.post(weibo);
+        return weiboService.post(weibo,loginUserId);
     }
     @PostMapping("/weibo/search")
     public List<Weibo> search(@RequestParam String keyword) {
@@ -39,39 +36,29 @@ public class WeiboController {
         return weiboService.list();
     }
 
-    @PostMapping("/user/{userId}")
-    public List<Weibo> listByUserId(@PathVariable Long userId){
-        return weiboService.listByUserId(userId);
+    @GetMapping("/weibo/my")
+    public List<Weibo> listByUserId(HttpSession session){
+        Long loginUserId = (Long)session.getAttribute("userId");
+        if(loginUserId == null){
+            throw new RuntimeException("ログインしてください。");
+        }
+        return weiboService.listByUserId(loginUserId);
     }
     @DeleteMapping("/{id}")
     public void deleteById (@PathVariable Long id,HttpSession session){
         Long loginUserId = (Long)session.getAttribute("userId");
         if(loginUserId == null){
-            throw new RuntimeException("请先登录");
+            throw new RuntimeException("ログインしてください。");
         }
-        Weibo weibo = weiboService.findById(id);
-        if(weibo == null){
-            throw new RuntimeException("微博不存在");
-        }
-        if(!weibo.getUser().getId().equals(loginUserId)){
-            throw new RuntimeException("不能删除别人的微博");
-        }
-        weiboService.deleteById(id);
+        weiboService.deleteById(id,loginUserId);
     }
     @PutMapping("/weibo/{id}")
     public Weibo update(@PathVariable Long id,@RequestBody Weibo weibo,HttpSession session){
         Long loginUserId = (Long)session.getAttribute("userId");
         if(loginUserId == null){
-            throw new RuntimeException("请先登录");
+            throw new RuntimeException("ログインしてください。");
         }
-        Weibo oldWeibo = weiboService.findById(id);
-        if(oldWeibo == null){
-            throw new RuntimeException("微博不存在");
-        }
-        if(!oldWeibo.getUser().getId().equals(loginUserId)){
-            throw new RuntimeException("不能修改别人的微博");
-        }
-        return weiboService.update(id,weibo.getContent());
+        return weiboService.update(id,weibo.getContent(),loginUserId);
     }
     @PostMapping("/weibo/{id}/like")
     public boolean like (@PathVariable Long id, HttpSession session){
