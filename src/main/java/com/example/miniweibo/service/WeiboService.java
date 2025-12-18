@@ -1,7 +1,9 @@
 package com.example.miniweibo.service;
 
+import com.example.miniweibo.entity.User;
 import com.example.miniweibo.entity.Weibo;
 import com.example.miniweibo.entity.WeiboLike;
+import com.example.miniweibo.repository.UserRepository;
 import com.example.miniweibo.repository.WeiboLikeRepository;
 import com.example.miniweibo.repository.WeiboRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,12 @@ public class WeiboService {
     NotificationService notificationService;
     @Autowired
     ViewHistoryService viewHistoryService;
-    public Weibo post(Weibo weibo) {
+    @Autowired
+    UserRepository userRepository;
+
+    public Weibo post(Weibo weibo,Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->new RuntimeException("ユーザーが存在しません"));
+        weibo.setUser(user);
         weibo.setCreateTime(LocalDateTime.now());
         return weiboRepository.save(weibo);
     }
@@ -30,8 +37,9 @@ public class WeiboService {
 
         return weiboRepository.findAll();
     }
-    public Weibo findById(Long id){
-        return  weiboRepository.findById(id).orElse(null);
+
+    public Weibo findById(Long id) {
+        return weiboRepository.findById(id).orElse(null);
     }
 
 
@@ -39,34 +47,47 @@ public class WeiboService {
         return weiboRepository.findByUserId(userId);
     }
 
-    public void deleteById (Long id) {
-
-        weiboRepository.deleteById(id);
+    public void deleteById(Long id, Long userId) {
+        Weibo weibo = weiboRepository.findById(id).orElseThrow(() -> new RuntimeException("投稿が存在しません。"));
+        User user = weibo.getUser();
+        Long nowId = user.getId();
+        if (!userId.equals(nowId)) {
+            throw new RuntimeException("自分の投稿しか削除できません。");
+        }
+            weiboRepository.deleteById(id);
     }
-    public Weibo update(Long id,String newContent){
-        Weibo weibo = weiboRepository.findById(id).orElse(null);
-        if(weibo == null){ return null;}
+
+    public Weibo update(Long id, String newContent,Long loginUserId) {
+        Weibo weibo = weiboRepository.findById(id).orElseThrow(() -> new RuntimeException("投稿が存在しません。"));
+
+        User user = weibo.getUser();
+        Long nowId = user.getId();
+        if (!loginUserId.equals(nowId)) {
+            throw new RuntimeException("他人の投稿は更新できません。");
+        }
         weibo.setContent(newContent);
         return weiboRepository.save(weibo);
     }
+
     public List<Weibo> searchByContent(String keyword) {
         return weiboRepository.findByContentContaining(keyword);
     }
-    public boolean like(Long userId,Long id){
+
+    public boolean like(Long userId, Long id) {
         Weibo weibo = weiboRepository.findById(id).orElse(null);
-        if(weibo == null){
+        if (weibo == null) {
             return false;
         }
-        Optional<WeiboLike> count = weiboLikeRepository.findByUserIdAndWeiboId(userId,id);
-        if(count.isPresent()){
+        Optional<WeiboLike> count = weiboLikeRepository.findByUserIdAndWeiboId(userId, id);
+        if (count.isPresent()) {
             WeiboLike like = count.get();
             weiboLikeRepository.delete(like);
             int n = weibo.getLikeCount();
             weibo.setLikeCount(n - 1);
             weiboRepository.save(weibo);
             return false;
-        }else{
-            WeiboLike xinLike =  new WeiboLike();
+        } else {
+            WeiboLike xinLike = new WeiboLike();
             xinLike.setUserId(userId);
             xinLike.setWeiboId(id);
             WeiboLike saved = weiboLikeRepository.save(xinLike);
