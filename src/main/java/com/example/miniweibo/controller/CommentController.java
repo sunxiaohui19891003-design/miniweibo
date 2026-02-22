@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.AbstractDocument;
 import java.util.List;
-
+@RequestMapping("/api")
 @RestController
 public class CommentController {
     @Autowired

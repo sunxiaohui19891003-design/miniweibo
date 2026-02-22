@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
+@RequestMapping("/api")
 public class FavoriteController {
     @Autowired
     FavoriteService favoriteService;
