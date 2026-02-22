@@ -44,7 +44,7 @@ public class WeiboController {
         }
         return weiboService.listByUserId(loginUserId);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/weibo/{id}")
     public void deleteById (@PathVariable Long id,HttpSession session){
         Long loginUserId = (Long)session.getAttribute("userId");
         if(loginUserId == null){
