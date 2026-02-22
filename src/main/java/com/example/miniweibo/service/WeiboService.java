@@ -74,6 +74,7 @@ public class WeiboService {
     }
 
     public boolean like(Long userId, Long id) {
+        System.out.println("LIKE userId=" + userId + " weiboId=" + id);
         Weibo weibo = weiboRepository.findById(id).orElse(null);
         if (weibo == null) {
             return false;
