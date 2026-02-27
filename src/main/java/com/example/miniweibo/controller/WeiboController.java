@@ -18,6 +18,8 @@ public class WeiboController {
     private WeiboService weiboService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private WeiboRepository weiboRepository;
     @PostMapping("/post")
     public Weibo post(@RequestBody Weibo weibo, HttpSession session){
         Long loginUserId = (Long)session.getAttribute("userId");
@@ -33,7 +35,7 @@ public class WeiboController {
 
     @PostMapping("/weibo/list")
     public List<Weibo> list(){
-        return weiboService.list();
+        return weiboRepository.findAllByOrderByIdDesc();
     }
 
     @GetMapping("/weibo/my")
